@@ -6,7 +6,7 @@ echo "----------"
 
 read -p "Is this a client install? [Y/n] " -n 1 install
 
-if ["$install" == "n" || "$install" == "N"]; then
+if [ "$install" == "n" || "$install" == "N" ]; then
     echo "Creating Server Instalation"
     echo "Moving common files to /root"
     sudo cp common/STcommon.py /root/.
@@ -30,5 +30,16 @@ else
     sudo systemctl enable locationLog.service
 fi
 
-echo "exiting"
+read -p "Installation complete. Configure now? [y/N] " -n 1 configure
+
+if [ "$configure" == "y" || "$configure" == "Y" ]; then
+    read -p "Address: " address
+    read -p "Port: " port
+    sudo python3 /root/STcommon.py -c "$address" "$port"
+    echo "Configuration complete."
+else
+    sudo python3 /root/STcommon.py -c "localhost" "3145"
+fi
+
+echo "Exiting"
 exit 0
