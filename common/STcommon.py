@@ -9,6 +9,7 @@ except ImportError as e:
 
 class Settings():
 	settings = configparser.ConfigParser()
+	settingsFile = ""
 	loaded = False
 
 	def loadSettings(self,settingsFile='STcommon/settings.ini'):
@@ -17,12 +18,15 @@ class Settings():
 			return False
 		else
 			self.loaded = True
+			self.settingsFile = settingsFile
 			return True
 
 	def writeSetting(self,key,value,section='DEFAULT'):
 		if !self.loaded:
 			return False
 		self.settings[section][key] = value
+		with open(self.settingsFile,'w') as settingsFile:
+			self.settings.write(settingsFile)
 		return True
 
 	def getSetting(self,key,section='DEFAULT'):
