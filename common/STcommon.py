@@ -1,9 +1,33 @@
 try:
 	import logging
+	import argparse
+	import configparser
 	from Crypto.PublicKey import RSA
 except ImportError as e:
 	print("[-] {}, exiting".format(e))
 	exit(1)
+
+class Settings():
+	settings = configparser.ConfigParser()
+	loaded = False
+
+	def loadSettings(self,settingsFile='STcommon/settings.ini'):
+		self.settings.read(settingsFile)
+		if len(self.settings.sections()) == 0:
+			return False
+		else
+			self.loaded = True
+			return True
+
+	def writeSetting(self,key,value,section='DEFAULT'):
+		if !self.loaded:
+			return False
+		self.settings[section][key] = value
+		return True
+
+	def getSetting(self,key,section='DEFAULT'):
+		return self.settings[section].get(key)
+
 
 def configDebugLog(logFileName):
 	log_file = logging.FileHandler(logFileName,mode='w')
