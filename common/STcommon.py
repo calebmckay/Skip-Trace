@@ -12,6 +12,13 @@ class Settings():
 	settingsFile = ""
 	loaded = False
 
+	def createSettings(self,settingsFile='STcommon/settings.ini'):
+		self.settingsFile = settingsFile
+		with open(self.settingsFile,'w') as outFile:
+			self.settings.write(outFile)
+		self.loaded = True
+		return True
+
 	def loadSettings(self,settingsFile='STcommon/settings.ini'):
 		self.settings.read(settingsFile)
 		if len(self.settings.sections()) == 0:
@@ -25,8 +32,8 @@ class Settings():
 		if !self.loaded:
 			return False
 		self.settings[section][key] = value
-		with open(self.settingsFile,'w') as settingsFile:
-			self.settings.write(settingsFile)
+		with open(self.settingsFile,'w') as outFile:
+			self.settings.write(outFile)
 		return True
 
 	def getSetting(self,key,section='DEFAULT'):
@@ -59,6 +66,7 @@ def parseArgs():
 	'''Parses args using the argparse lib'''
 	parser = argparse.ArgumentParser(description='Location logging server')
 
+	parser.add_argument('-c', '--configure', nargs=2, metavar='ADDRESS PORT')
 	parser.add_argument('-g', '--generate-keys', metavar='PATH', type=str)
 
 	return parser.parse_args()
@@ -68,3 +76,8 @@ if __name__ == "__main__":
 
 	if args.generate_keys:
 		keyGen(args.generate_keys)
+	if args.configure:
+		Settings.createSettings()
+		for section in ["DEFAULT","Server","Client"]:
+			Settings.writeSetting("Address",str(args.configure[0]),section)
+			Settings.writeSetting("Port",str(args.configure[1]),section)
