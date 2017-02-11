@@ -1,5 +1,5 @@
 try:
-	from STcommon import configDebugLog
+	from STcommon import configDebugLog, Settings
 	import socket
 	import argparse
 	from ipaddress import ip_address
@@ -69,27 +69,41 @@ def parseArgs():
 	parser = argparse.ArgumentParser(description='Location logging server')
 
 	parser.add_argument('-a', '--address', metavar='ADDRESS', type=ip_address)
+	parser.add_argument('-c', '--configure', action='store_true')
 	parser.add_argument('-p', '--port', metavar='PORT', type=int)
 
 	return parser.parse_args()
 
 if __name__ == "__main__":
 	logger = configDebugLog("/var/log/skip_trace.log")
-	HOST, PORT = "localhost", 3145
-	logger.info("[ ] Starting location logging")
 
-	args = parseArgs()
+	#Load settings from file
+	if !(Settings.loadSettings()):
+		logger.critical("[-] Can't open configuration settings, Exiting")
+		exit(3)
+	HOST = Settings.getSetting('Address','Client')
+	PORT = Settings.getSetting('Port','Client')
 
 	#check our args and update vars accordingly
+	args = parseArgs()
+	if args.configure:
+		if args.address:
+			Settings.writeSetting('Address',str(args.address),'Client')
+			logger.info("[ ] Address {0} saved to settings".format(str(args.address)))
+		if args.port:
+			Settings.writeSetting('Port',str(args.port),'Client')
+			logger.info("[ ] Port {0} saved to settings".format(str(args.port)))
 	if args.address:
 		HOST = str(args.address)
 	if args.port:
 		PORT = args.port
 
+	logger.info("[ ] Starting location logging")
+
 	#check if we have the public key 
 	if not isfile("./python.pub"):
 		logger.critical("[-] Missing public key, Exiting")
-		exit(3)
+		exit(4)
 
 	#get the public key and create the cipher
 	with open("./python.pub", "r") as keyFile:

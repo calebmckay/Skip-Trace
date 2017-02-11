@@ -1,5 +1,5 @@
 try:
-	from STcommon import configDebugLog
+	from STcommon import configDebugLog, Settings
 	import socketserver
 	from time import strftime
 	import sqlite3
@@ -86,17 +86,30 @@ def parseArgs():
 	parser = argparse.ArgumentParser(description='Location logging server')
 
 	parser.add_argument('-a', '--address', metavar='ADDRESS', type=ip_address)
+	parser.add_argument('-c', '--configure', action='store_true')
 	parser.add_argument('-p', '--port', metavar='PORT', type=int)
 
 	return parser.parse_args()
 
 if __name__ == "__main__":
 	logger = configDebugLog("/var/log/skip_trace.log")
-	HOST, PORT = "0.0.0.0", 3145
 
-	args = parseArgs()
+	#Load settings from file
+	if !(Settings.loadSettings()):
+		logger.critical("[-] Can't open configuration settings, Exiting")
+		exit(2)
+	HOST = Settings.getSetting('Address','Server')
+	PORT = Settings.getSetting('Port','Server')
 
 	#check our args and update vars accordingly
+	args = parseArgs()
+	if args.configure:
+		if args.address:
+			Settings.writeSetting('Address',str(args.address),'Server')
+			logger.info("[ ] Address {0} saved to settings".format(str(args.address)))
+		if args.port:
+			Settings.writeSetting('Port',str(args.port),'Server')
+			logger.info("[ ] Port {0} saved to settings".format(str(args.port)))
 	if args.address:
 		HOST = str(args.address)
 	if args.port:
@@ -105,7 +118,7 @@ if __name__ == "__main__":
 	#check if we have the private key
 	if not isfile("./python.pem"):
 		logger.critical("[-] Missing private key, Exiting")
-		exit(-2)
+		exit(3)
 
 	with open("./python.pem", "r") as keyFile:
 		MyUDPHandler.RSAcipher = PKCS1_OAEP.new(RSA.importKey(keyFile.read()))
