@@ -12,15 +12,15 @@ class Settings():
 	settingsFile = ""
 	loaded = False
 
-	def createSettings(self,settingsFile='STcommon/settings.ini'):
-		self.settingsFile = settingsFile
+	def createSettings(self,inFile='STcommon/settings.ini'):
+		self.settingsFile = inFile
 		with open(self.settingsFile,'w') as outFile:
 			self.settings.write(outFile)
 		self.loaded = True
 		return True
 
-	def loadSettings(self,settingsFile='STcommon/settings.ini'):
-		self.settings.read(settingsFile)
+	def loadSettings(self,inFile='STcommon/settings.ini'):
+		self.settings.read(inFile)
 		if len(self.settings.sections()) == 0:
 			return False
 		else
