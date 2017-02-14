@@ -8,9 +8,10 @@ except ImportError as e:
 	exit(1)
 
 class Settings():
-	settings = configparser.ConfigParser()
-	settingsFile = ""
-	loaded = False
+	def __init__()
+		settings = configparser.ConfigParser()
+		settingsFile = ""
+		loaded = False
 
 	def createSettings(self,inFile='STcommon/settings.ini'):
 		self.settingsFile = inFile

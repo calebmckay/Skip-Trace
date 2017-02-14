@@ -93,22 +93,23 @@ def parseArgs():
 
 if __name__ == "__main__":
 	logger = configDebugLog("/var/log/skip_trace.log")
+	mysettings = Settings()
 
 	#Load settings from file
-	if !(Settings.loadSettings()):
+	if !(mysettings.loadSettings()):
 		logger.critical("[-] Can't open configuration settings, Exiting")
 		exit(2)
-	HOST = Settings.getSetting('Address')
-	PORT = Settings.getSetting('Port')
+	HOST = mysettings.getSetting('Address')
+	PORT = mysettings.getSetting('Port')
 
 	#check our args and update vars accordingly
 	args = parseArgs()
 	if args.configure:
 		if args.address:
-			Settings.writeSetting('Address',str(args.address))
+			mysettings.writeSetting('Address',str(args.address))
 			logger.info("[ ] Address {0} saved to settings".format(str(args.address)))
 		if args.port:
-			Settings.writeSetting('Port',str(args.port))
+			mysettings.writeSetting('Port',str(args.port))
 			logger.info("[ ] Port {0} saved to settings".format(str(args.port)))
 	if args.address:
 		HOST = str(args.address)
