@@ -25,11 +25,11 @@ class Settings():
 			return False
 		else
 			self.loaded = True
-			self.settingsFile = settingsFile
+			self.settingsFile = inFile
 			return True
 
 	def writeSetting(self,key,value,section='DEFAULT'):
-		if !self.loaded:
+		if not self.loaded:
 			return False
 		self.settings[section][key] = value
 		with open(self.settingsFile,'w') as outFile:
