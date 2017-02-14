@@ -78,6 +78,5 @@ if __name__ == "__main__":
 		keyGen(args.generate_keys)
 	if args.configure:
 		Settings.createSettings()
-		for section in ["DEFAULT","Server","Client"]:
-			Settings.writeSetting("Address",str(args.configure[0]),section)
-			Settings.writeSetting("Port",str(args.configure[1]),section)
+		Settings.writeSetting("Address",str(args.configure[0]),'DEFAULT')
+		Settings.writeSetting("Port",str(args.configure[1]),'DEFAULT')

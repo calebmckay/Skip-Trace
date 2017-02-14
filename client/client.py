@@ -81,17 +81,17 @@ if __name__ == "__main__":
 	if !(Settings.loadSettings()):
 		logger.critical("[-] Can't open configuration settings, Exiting")
 		exit(3)
-	HOST = Settings.getSetting('Address','Client')
-	PORT = Settings.getSetting('Port','Client')
+	HOST = Settings.getSetting('Address')
+	PORT = Settings.getSetting('Port')
 
 	#check our args and update vars accordingly
 	args = parseArgs()
 	if args.configure:
 		if args.address:
-			Settings.writeSetting('Address',str(args.address),'Client')
+			Settings.writeSetting('Address',str(args.address))
 			logger.info("[ ] Address {0} saved to settings".format(str(args.address)))
 		if args.port:
-			Settings.writeSetting('Port',str(args.port),'Client')
+			Settings.writeSetting('Port',str(args.port))
 			logger.info("[ ] Port {0} saved to settings".format(str(args.port)))
 	if args.address:
 		HOST = str(args.address)
