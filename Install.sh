@@ -17,6 +17,8 @@ if [ "$install" == "n" || "$install" == "N" ]; then
     sudo cp server/locationLog.service /lib/systemd/system/.
     sudo systemctl daemon-reload
     sudo systemctl enable locationLog.service
+
+    sudo python3 /root/STcommon.py -c "0.0.0.0" "3145"
 else
     echo "Creating Server Instalation"
     echo "Moving common files to /root"
@@ -28,17 +30,6 @@ else
     sudo cp client/locationLog.service /lib/systemd/system/.
     sudo systemctl daemon-reload
     sudo systemctl enable locationLog.service
-fi
-
-read -p "Installation complete. Configure now? [y/N] " -n 1 configure
-
-if [ "$configure" == "y" || "$configure" == "Y" ]; then
-    read -p "Address: " address
-    read -p "Port: " port
-    sudo python3 /root/STcommon.py -c "$address" "$port"
-    echo "Configuration complete."
-else
-    sudo python3 /root/STcommon.py -c "localhost" "3145"
 fi
 
 echo "Exiting"
