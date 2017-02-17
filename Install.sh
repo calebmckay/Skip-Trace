@@ -18,7 +18,7 @@ if [ "$install" == "n" || "$install" == "N" ]; then
     sudo systemctl daemon-reload
     sudo systemctl enable locationLog.service
 
-    sudo python3 /root/STcommon.py -c "0.0.0.0" "3145"
+    sudo python3 /root/STcommon.py -c "0.0.0.0" "3145" "/var/log/skip_trace.log"
 else
     echo "Creating Server Instalation"
     echo "Moving common files to /root"

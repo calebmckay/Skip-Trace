@@ -75,15 +75,15 @@ def parseArgs():
 	return parser.parse_args()
 
 if __name__ == "__main__":
-	logger = configDebugLog("/var/log/skip_trace.log")
 	mysettings = Settings()
 
 	#Load settings from file
 	if !(mysettings.loadSettings()):
-		logger.critical("[-] Can't open configuration settings, Exiting")
+		print("[-] Can't open configuration settings, Exiting")
 		exit(3)
 	HOST = mysettings.getSetting('Address')
 	PORT = mysettings.getSetting('Port')
+	logger = configDebugLog(mysettings.getSetting('LogFile'))
 
 	#check our args and update vars accordingly
 	args = parseArgs()

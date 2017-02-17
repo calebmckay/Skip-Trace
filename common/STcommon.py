@@ -67,7 +67,7 @@ def parseArgs():
 	'''Parses args using the argparse lib'''
 	parser = argparse.ArgumentParser(description='Location logging server')
 
-	parser.add_argument('-c', '--configure', nargs=2, metavar='ADDRESS PORT')
+	parser.add_argument('-c', '--configure', nargs=3, metavar='ADDRESS PORT LOGFILE')
 	parser.add_argument('-g', '--generate-keys', metavar='PATH', type=str)
 
 	return parser.parse_args()
@@ -81,3 +81,4 @@ if __name__ == "__main__":
 		Settings.createSettings()
 		Settings.writeSetting("Address",str(args.configure[0]),'DEFAULT')
 		Settings.writeSetting("Port",str(args.configure[1]),'DEFAULT')
+		Settings.writeSetting("LogFile",str(args.configure[2]),'DEFAULT')
