@@ -3,6 +3,7 @@ try:
 	import argparse
 	import configparser
 	from Crypto.PublicKey import RSA
+	from os.path import isfile
 except ImportError as e:
 	print("[-] {}, exiting".format(e))
 	exit(1)
@@ -21,13 +22,12 @@ class Settings():
 		return True
 
 	def loadSettings(self,inFile='STcommon/settings.ini'):
+		if not isfile(inFile):
+			self.createSettings(inFile)
 		self.settings.read(inFile)
-		if len(self.settings.sections()) == 0:
-			return False
-		else
-			self.loaded = True
-			self.settingsFile = inFile
-			return True
+		self.loaded = True
+		self.settingsFile = inFile
+		return True
 
 	def writeSetting(self,key,value,section='DEFAULT'):
 		if not self.loaded:
