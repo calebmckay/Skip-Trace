@@ -1,9 +1,8 @@
 try:
 	from STcommon import configDebugLog, Settings
 	import socketserver
-	from time import strftime
-	import sqlite3
 	import argparse
+	from time import strftime
 	from ipaddress import ip_address
 	from os.path import isfile
 	from Crypto.Cipher import PKCS1_OAEP
@@ -55,7 +54,7 @@ class MyUDPHandler(socketserver.BaseRequestHandler):
 			#create AES cipher
 			iv = Random.new().read(AES.block_size)
 			AEScipher = AES.new(key, AES.MODE_CFB, iv)
-			reply = iv + AEScipher.encrypt("\t{0}\t{1:02}:{2:02}\n".format(clientName,date.tm_hour,date.tm_min))
+			reply = iv + AEScipher.encrypt(strftime('_#_{0}_#_%H:%M:%S:%f\n'.format(clientName)))
 			logger.info("[+] Sending success message")
 
 		finally:
@@ -91,9 +90,8 @@ def parseArgs():
 
 	return parser.parse_args()
 
-if __name__ == "__main__":
+def main():
 	mysettings = Settings()
-
 	#Load settings from file
 	if !(mysettings.loadSettings()):
 		print("[-] Can't open configuration settings, Exiting")
@@ -126,3 +124,6 @@ if __name__ == "__main__":
 
 	server = socketserver.UDPServer((HOST, PORT), MyUDPHandler)
 	server.serve_forever()
+
+if __name__ == "__main__":
+	main()

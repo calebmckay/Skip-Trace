@@ -13,7 +13,7 @@ except ImportError as e:
 	print("[-] {}, exiting".format(e))
 	exit(1)
 
-def main(HOST, PORT, CIPHER, tryAgain = 6):
+def contactServer(HOST, PORT, CIPHER, tryAgain = 6):
 
 	AES_key = Random.new().read(32)
 	msg = CIPHER.encrypt("3317BLT5_#_{0}_#_{1}\n".format(socket.gethostname()[:32], hexlify(AES_key).decode()).encode())
@@ -44,7 +44,7 @@ def main(HOST, PORT, CIPHER, tryAgain = 6):
 
 	reply = cipherAES.decrypt(received[AES.block_size:])
 
-	if reply.decode().split("\t")[1] == socket.gethostname().strip()[:32]:
+	if reply.decode().split("_#_")[1] == socket.gethostname().strip()[:32]:
 		logger.info("[+] Location logged to server")
 		return True
 	else:
@@ -74,7 +74,7 @@ def parseArgs():
 
 	return parser.parse_args()
 
-if __name__ == "__main__":
+def main():
 	mysettings = Settings()
 
 	#Load settings from file
@@ -110,6 +110,9 @@ if __name__ == "__main__":
 	with open("./python.pub", "r") as keyFile:
 		cipherRSA = PKCS1_OAEP.new(RSA.importKey(keyFile.read()))
 
-	while(not main(HOST, PORT, cipherRSA)):
+	while(not contactServer(HOST, PORT, cipherRSA)):
 		logger.info("[ ] Trying again.")
+
+if __name__ == "__main__":
+	main()
 	exit(0)
