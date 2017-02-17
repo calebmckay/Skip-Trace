@@ -67,18 +67,30 @@ def parseArgs():
 	'''Parses args using the argparse lib'''
 	parser = argparse.ArgumentParser(description='Location logging server')
 
-	parser.add_argument('-c', '--configure', nargs=3, metavar='ADDRESS PORT LOGFILE')
+	parser.add_argument('-a', '--address', metavar='ADDRESS')
+	parser.add_argument('-c', '--configure', action='store_true')
 	parser.add_argument('-g', '--generate-keys', metavar='PATH', type=str)
+	parser.add_argument('-L', '--logfile', metavar='LOG_FILE')
+	parser.add_argument('-p', '--port', metavar='PORT')
 
 	return parser.parse_args()
 
 if __name__ == "__main__":
+	mysettings = Settings()
+
 	args = parseArgs()
 
 	if args.generate_keys:
 		keyGen(args.generate_keys)
 	if args.configure:
-		Settings.createSettings()
-		Settings.writeSetting("Address",str(args.configure[0]),'DEFAULT')
-		Settings.writeSetting("Port",str(args.configure[1]),'DEFAULT')
-		Settings.writeSetting("LogFile",str(args.configure[2]),'DEFAULT')
+		if not mysettings.loaded:
+			mysettings.loadSettings()
+		if args.address:
+			mysettings.writeSetting("Address",str(args.address),'DEFAULT')
+		if args.port:
+			mysettings.writeSetting("Port",str(args.port),'DEFAULT')
+		if args.logfile:
+			mysettings.writeSetting("LogFile",str(args.logfile),'DEFAULT')
+	else
+		if args.address or args.port or args.logfile:
+			print("ERROR: must include -c or --configure")
