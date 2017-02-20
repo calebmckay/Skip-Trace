@@ -75,6 +75,7 @@ def parseArgs():
 	return parser.parse_args()
 
 def main():
+	global logger
 	mysettings = Settings()
 
 	#Load settings from file
