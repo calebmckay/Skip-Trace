@@ -14,7 +14,7 @@ class Settings():
 		settingsFile = ""
 		loaded = False
 
-	def createSettings(self,inFile='STcommon/settings.ini'):
+	def __createSettings(self,inFile='STcommon/settings.ini'):
 		self.settingsFile = inFile
 		with open(self.settingsFile,'w') as outFile:
 			self.settings.write(outFile)
@@ -23,7 +23,7 @@ class Settings():
 
 	def loadSettings(self,inFile='STcommon/settings.ini'):
 		if not isfile(inFile):
-			self.createSettings(inFile)
+			self.__createSettings(inFile)
 		self.settings.read(inFile)
 		self.loaded = True
 		self.settingsFile = inFile
